@@ -1,0 +1,212 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[siunitx]{circuitikz}
+\usepackage{tikz}
+\usepackage[colorinlistoftodos, color=orange!50]{todonotes}
+\usepackage{hyperref}
+\usepackage[numbers, square]{natbib}
+\usepackage{fancybox}
+\usepackage{epsfig}
+\usepackage{soul}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage[version=4]{mhchem}
+\usepackage{multicol}
+\newcommand{\blah}{blah blah blah \dots}
+\setlength{\marginparwidth}{3.4cm}
+
+
+% NEW COUNTERS
+\newcounter{points}
+\setcounter{points}{100}
+\newcounter{spelling}
+\newcounter{english}
+\newcounter{units}
+\newcounter{other}
+\newcounter{source}
+\newcounter{concept}
+\newcounter{missing}
+\newcounter{math}
+\newcounter{terms}
+\newcounter{clarity}
+\newcounter{late}
+
+\newcommand{\late}{\todo{late submittal (-5)}
+\addtocounter{late}{-5}
+\addtocounter{points}{-5}}
+
+\definecolor{pink}{RGB}{255,182,193}
+\newcommand{\hlp}[2][pink]{ {\sethlcolor{#1} \hl{#2}} }
+
+\definecolor{myblue}{rgb}{0.668, 0.805, 0.929}
+\newcommand{\hlb}[2][myblue]{ {\sethlcolor{#1} \hl{#2}} }
+
+\newcommand{\clarity}[2]{\todo[color=CornflowerBlue!50]{CLARITY of WRITING(#1) #2}\addtocounter{points}{#1}
+\addtocounter{clarity}{#1}}
+
+\newcommand{\other}[2]{\todo{OTHER(#1) #2} \addtocounter{points}{#1} \addtocounter{other}{#1}}
+
+\newcommand{\spelling}{\todo[color=CornflowerBlue!50]{SPELLING (-1)} \addtocounter{points}{-1}
+\addtocounter{spelling}{-1}}
+\newcommand{\units}{\todo{UNITS (-1)} \addtocounter{points}{-1}
+\addtocounter{units}{-1}}
+
+\newcommand{\english}{\todo[color=CornflowerBlue!50]{SYNTAX and GRAMMAR (-1)} \addtocounter{points}{-1}
+\addtocounter{english}{-1}}
+
+\newcommand{\source}{\todo{SOURCE(S) (-2)} \addtocounter{points}{-2}
+\addtocounter{source}{-2}}
+\newcommand{\concept}{\todo{CONCEPT (-2)} \addtocounter{points}{-2}
+\addtocounter{concept}{-2}}
+
+\newcommand{\missing}[2]{\todo{MISSING CONTENT (#1) #2} \addtocounter{points}{#1}
+\addtocounter{missing}{#1}}
+
+\newcommand{\maths}{\todo{MATH (-1)} \addtocounter{points}{-1}
+\addtocounter{math}{-1}}
+\newcommand{\terms}{\todo[color=CornflowerBlue!50]{SCIENCE TERMS (-1)} \addtocounter{points}{-1}
+\addtocounter{terms}{-1}}
+
+
+\newcommand{\summary}[1]{
+\begin{mdframed}[nobreak=true]
+\begin{minipage}{\textwidth}
+\vspace{0.5cm}
+\begin{center}
+\Large{Grade Summary} \hrule 
+\end{center} \vspace{0.5cm}
+General Comments: #1
+
+\vspace{0.5cm}
+Possible Points \dotfill 100 \\
+Points Lost (Late Submittal) \dotfill \thelate \\
+Points Lost (Science Terms) \dotfill \theterms \\
+Points Lost (Syntax and Grammar) \dotfill \theenglish \\
+Points Lost (Spelling) \dotfill \thespelling \\
+Points Lost (Units) \dotfill \theunits \\
+Points Lost (Math) \dotfill \themath \\
+Points Lost (Sources) \dotfill \thesource \\
+Points Lost (Concept) \dotfill \theconcept \\
+Points Lost (Missing Content) \dotfill \themissing \\
+Points Lost (Clarity of Writing) \dotfill \theclarity \\
+Other \dotfill \theother \\[0.5cm]
+\begin{center}
+\large{\textbf{Grade:} \fbox{\thepoints}}
+\end{center}
+\end{minipage}
+\end{mdframed}}
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}\title{
+\normalfont \normalsize 
+\rule{\linewidth}{0.5pt} \\[6pt] 
+\huge CS-313 Assignment 1 \\
+\rule{\linewidth}{2pt}  \\[10pt]
+}
+\author{Shashank P, 200010048}
+\date{\today}
+
+\begin{document}
+\maketitle
+\section{Introduction}
+\subsection{Scientists}
+\subsubsection{E.F. Codd}
+\hspace{\parindent} Edgar Frank Codd was an English computer scientist who invented the relational model for database management.
+Edgar Frank Codd was born in Fortuneswell.
+He was working for IBM and, from 1961 to 1965, pursuing his doctorate in computer science at the University of Michigan. 
+Two years later, he moved to San Jose to work at IBM's Research Laboratory.
+Initially, IBM refused to implement the relational model.
+Then IBM included it in its Future Systems project
+but put it in charge of its developers, who were unfamiliar with Codd's ideas.
+Codd's theorem, proven in his seminal work on the relational model, equates the expressive power of 
+relational algebra and relational calculus.
+Codd received the Turing Award in 1981 and, in 1994, was inducted as a Fellow of the Association for Computing Machinery.
+In 2004, SIGMOD renamed its highest prize to the SIGMOD Edgar F. Codd Innovations Award in his honour.  \newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://en.wikipedia.org/wiki/Edgar_F._Codd}{E.F. Codd}
+\subsubsection{Michael Stonebraker}
+\hspace{\parindent}Michael Ralph Stonebraker is a computer scientist specializing in database systems. 
+He earned his B.S.E. in 1965 and his M.S. and PhD from the University of Michigan in 1967 and 1971.
+During his time at the University of California, Berkeley, he focused on relational database 
+management systems such as Ingres and Postgres, and at 
+(MIT) he developed more novel data management techniques such as C-Store, H-Store and SciDB.
+His awards include the IEEE John von Neumann Medal, SIGMOD Edgar F. Codd Innovations Award.
+He was elected a member of the National Academy of Engineering for the
+commercialization of relational and object-relational DB systems
+In March 2015, he won the 2014 ACM Turing Award.
+He won the 2015 Commonwealth Award.
+Stonebraker is currently a Professor at UC Berkeley.  \newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://en.wikipedia.org/wiki/Michael_Stonebraker}{Michael Stonebraker}
+\subsection{Data Model and Database Application}
+\subsubsection{Data model}
+\hspace{\parindent}A data model defines how to model the logical structure of a database. A data model is a basic entity for introducing abstractions into a DBMS. 
+A data model defines how data is connected, processed, and stored in a system. Your first data model might be a flat data model that requires all the 
+data you use to be on the same level. The previous data model was not very scientific and was prone to many duplicates and update anomalies. 
+The Entity-Relationship (ER) model is based on the concept of real-world entities and the relationships between them. When formulating a 
+real-world scenario into a database model, The ER model creates entity sets, relationship sets, common attributes, and constraints. 
+The ER model is ideal for conceptual database design. The most common data model in DBMS is the relational model. This is a more scientific model than 
+others. This model is based on primary predicate logic and defines tables as n-ary relations. \newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://www.tutorialspoint.com/dbms/dbms_data_models.htm}{Data model}
+\subsubsection{Database Application}
+A database application is a program whose purpose is to retrieve information from a database. From here, you can insert, 
+modify or delete information and it will be updated again in the database. A hallmark of modern database applications is allowing concurrent updates 
+and queries from multiple users. Database applications with web interfaces had the advantage of being able to be used on devices of various sizes. 
+An early example of a database application with a web interface was amazon.com using Oracle's relational database management system. 
+Examples of database applications include Amazon, eBay, Google, Youtube, and Facebook. 
+Many of today's computer systems are database applications such as Facebook built on top of MySQL. \newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://en.wikipedia.org/wiki/Database_application}{Database Application}
+\section{Digital Applications}
+Databases form an integral part of many applications developed from small scale
+to large scale. Some of the apps in India that make use of a large
+database are as follows:
+\begin{itemize}
+    \item \textbf{Finance:} Google pay, PhonePe, Paytm, BHIM app, etc.
+    \item \textbf{Retail:} Shopsy, Ajio, Flipkart, Amazon, etc.
+    \item \textbf{Manufacturing:} Odoo, VTScada, Anvyl, nTask, etc.
+    \item \textbf{IT:} Infosys, Wipro, HCL Technologies, Tech Mahindra, etc.
+\end{itemize}
+\textbf{\underline{Source:}}\hspace{\parindent}
+\href{https://www.similarweb.com/apps/top/google/app-index/in/finance/top-free/}{Finance},
+\href{https://www.mobileaction.co/top-apps/shopping-18/android/in}{Retail},
+\href{https://sourceforge.net/software/manufacturing/india/}{Manufacturing},
+\href{https://en.wikipedia.org/wiki/List_of_Indian_IT_companies}{IT}
+\section{OLTP \& OLAP}
+\subsection{OLTP}
+Online transaction processing is data processing that executes a series of transactions simultaneously. 
+These transactions are traditionally called economic or financial transactions. It is recorded and protected so the business can access the information 
+at any time for accounting or reporting purposes. The primary definition of a transaction still underlies most OLTP systems. Therefore, 
+online transaction processing typically involves inserting, updating, and deleting small amounts of data in data stores. 
+The most common architecture for OLTP systems with transactional data is a three-tier architecture consisting of a presentation tier: 
+a business logic layer, and a data storage layer. Relational databases were explicitly built for transactional applications.\newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://www.oracle.com/in/database/what-is-oltp/#:~:text=OLTP%20or%20Online%20Transaction%20Processing,sending%20text%20messages%2C%20for%20example.}{OLTP}
+\subsection{OLAP}
+Online Analytical Processing is software for high-speed multidimensional analysis of large amounts of data. A warehouse, data mart, 
+or other consolidated, centralized data store. In a data warehouse, records are stored in tables and can be organized individually, 
+data for only two dimensions at a time. OLAP extracts data from multiple relational datasets and reorganizes them into multidimensional ones, 
+A format that allows for swift processing and insightful analysis. The core of most OLAP systems, the OLAP cube, is an array-based multidimensional 
+A database that can process and analyze multidimensioned data much faster and more efficiently than traditional relational databases.\newline \newline
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://www.ibm.com/cloud/learn/olap#:~:text=OLAP%20(for%20online%20analytical%20processing,other%20unified%2C%20centralized%20data%20store.}{OLAP}
+\subsection{Differences}
+Key Difference between \textbf{OLTP} and \textbf{OLAP} are as follows: 
+\begin{center}
+\begin{table}[ht]
+\begin{tabular}{|c|c|}  
+\hline  
+\textbf{OLTP}&\textbf{OLAP}\\ \hline  
+Enable real-time executions of multiple transactions&Querying multiple records for analysis\\ \hline
+Lightning fast response&Magnitudes slower than OLTP\\ \hline
+Modify small data frequently&Usually for large data, but read intensive\\ \hline
+Frequent data backups&Infrequent data backups\\ \hline
+Less storage space&Usually requires a lot of storage\\ \hline
+Run queries with few records&Run complex queries spanning multiple records\\ \hline
+\end{tabular}
+\caption{OLTP vs OLAP}
+\end{table}
+\end{center}
+\textbf{\underline{Source:}}\hspace{\parindent}\href{https://www.oracle.com/in/database/what-is-oltp/#:~:text=OLTP%20or%20Online%20Transaction%20Processing,sending%20text%20messages%2C%20for%20example.}{OLTP vs OLAP}
+\end{document}

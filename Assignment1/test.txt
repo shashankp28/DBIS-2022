@@ -1,0 +1,5 @@
+OLAP (for online analytical processing) is software for performing multidimensional analysis at high speeds on large volumes of data from a data 
+warehouse, data mart, or some other unified, centralized data store. in a data warehouse, data sets are stored in tables, each of which can organize 
+data into just two of these dimensions at a time. OLAP extracts data from multiple relational data sets and reorganizes it into a multidimensional 
+format that enables very fast processing and very insightful analysis. The core of most OLAP systems, the OLAP cube is an array-based multidimensional 
+database that makes it possible to process and analyze multiple data dimensions much more quickly and efficiently than a traditional relational database.
