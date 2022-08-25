@@ -1,0 +1,2 @@
+Docker: docker run --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -dp 3306:3306 -v mysql:/var/lib/mysql --restart always mysql:latest
+Connection: localhost:3306
