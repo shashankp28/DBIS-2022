@@ -1,126 +1,329 @@
 \documentclass{article}
-\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1.5in]{geometry}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xstring}
 \usepackage{graphicx}
-\usepackage[siunitx]{circuitikz}
-\usepackage{tikz}
-\usepackage[colorinlistoftodos, color=orange!50]{todonotes}
-\usepackage{hyperref}
-\usepackage[numbers, square]{natbib}
-\usepackage{fancybox}
-\usepackage{epsfig}
-\usepackage{soul}
-\usepackage[framemethod=tikz]{mdframed}
-\usepackage[shortlabels]{enumitem}
-\usepackage[version=4]{mhchem}
-\usepackage{multicol}
-\newcommand{\blah}{blah blah blah \dots}
-\setlength{\marginparwidth}{3.4cm}
+\usepackage[export]{adjustbox}
 
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{ltgray}{rgb}{0.5,0.5,0.5}
 
-% NEW COUNTERS
-\newcounter{points}
-\setcounter{points}{100}
-\newcounter{spelling}
-\newcounter{english}
-\newcounter{units}
-\newcounter{other}
-\newcounter{source}
-\newcounter{concept}
-\newcounter{missing}
-\newcounter{math}
-\newcounter{terms}
-\newcounter{clarity}
-\newcounter{late}
+\makeatletter
+\newif\ifcolname
+\colnamefalse
 
-\newcommand{\late}{\todo{late submittal (-5)}
-\addtocounter{late}{-5}
-\addtocounter{points}{-5}}
-
-\definecolor{pink}{RGB}{255,182,193}
-\newcommand{\hlp}[2][pink]{ {\sethlcolor{#1} \hl{#2}} }
-
-\definecolor{myblue}{rgb}{0.668, 0.805, 0.929}
-\newcommand{\hlb}[2][myblue]{ {\sethlcolor{#1} \hl{#2}} }
-
-\newcommand{\clarity}[2]{\todo[color=CornflowerBlue!50]{CLARITY of WRITING(#1) #2}\addtocounter{points}{#1}
-\addtocounter{clarity}{#1}}
-
-\newcommand{\other}[2]{\todo{OTHER(#1) #2} \addtocounter{points}{#1} \addtocounter{other}{#1}}
-
-\newcommand{\spelling}{\todo[color=CornflowerBlue!50]{SPELLING (-1)} \addtocounter{points}{-1}
-\addtocounter{spelling}{-1}}
-\newcommand{\units}{\todo{UNITS (-1)} \addtocounter{points}{-1}
-\addtocounter{units}{-1}}
-
-\newcommand{\english}{\todo[color=CornflowerBlue!50]{SYNTAX and GRAMMAR (-1)} \addtocounter{points}{-1}
-\addtocounter{english}{-1}}
-
-\newcommand{\source}{\todo{SOURCE(S) (-2)} \addtocounter{points}{-2}
-\addtocounter{source}{-2}}
-\newcommand{\concept}{\todo{CONCEPT (-2)} \addtocounter{points}{-2}
-\addtocounter{concept}{-2}}
-
-\newcommand{\missing}[2]{\todo{MISSING CONTENT (#1) #2} \addtocounter{points}{#1}
-\addtocounter{missing}{#1}}
-
-\newcommand{\maths}{\todo{MATH (-1)} \addtocounter{points}{-1}
-\addtocounter{math}{-1}}
-\newcommand{\terms}{\todo[color=CornflowerBlue!50]{SCIENCE TERMS (-1)} \addtocounter{points}{-1}
-\addtocounter{terms}{-1}}
-
-
-\newcommand{\summary}[1]{
-\begin{mdframed}[nobreak=true]
-\begin{minipage}{\textwidth}
-\vspace{0.5cm}
-\begin{center}
-\Large{Grade Summary} \hrule 
-\end{center} \vspace{0.5cm}
-General Comments: #1
-
-\vspace{0.5cm}
-Possible Points \dotfill 100 \\
-Points Lost (Late Submittal) \dotfill \thelate \\
-Points Lost (Science Terms) \dotfill \theterms \\
-Points Lost (Syntax and Grammar) \dotfill \theenglish \\
-Points Lost (Spelling) \dotfill \thespelling \\
-Points Lost (Units) \dotfill \theunits \\
-Points Lost (Math) \dotfill \themath \\
-Points Lost (Sources) \dotfill \thesource \\
-Points Lost (Concept) \dotfill \theconcept \\
-Points Lost (Missing Content) \dotfill \themissing \\
-Points Lost (Clarity of Writing) \dotfill \theclarity \\
-Other \dotfill \theother \\[0.5cm]
-\begin{center}
-\large{\textbf{Grade:} \fbox{\thepoints}}
-\end{center}
-\end{minipage}
-\end{mdframed}}
-\renewcommand*{\thefootnote}{\fnsymbol{footnote}}\title{
-\normalfont \normalsize 
-\rule{\linewidth}{0.5pt} \\[6pt] 
-\huge CS-313 Assignment 2 \\
-\rule{\linewidth}{2pt}  \\[10pt]
+\def\keywordcheck{%
+\IfStrEq*{\the\lst@token}{select}{\global\colnametrue}{}%
+\IfStrEq*{\the\lst@token}{where}{\global\colnametrue}{}%
+\IfStrEq*{\the\lst@token}{from}{\global\colnamefalse}{}%
+\color{blue}%
 }
+\def\setidcolor{%
+\ifcolname\color{purple}\else\color{black}\fi%
+}
+\makeatother
+
+\lstset{%
+    backgroundcolor=\color{white},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{dkgreen},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    frame=single,
+    keepspaces=true,
+    language=SQL,
+    otherkeywords={is},
+    morekeywords={*,modify,MODIFY,...},
+    keywordstyle=\keywordcheck,
+    identifierstyle=\setidcolor,
+    numbers=left,
+    numbersep=15pt,
+    numberstyle=\tiny,
+    rulecolor=\color{ltgray},
+    showspaces=false,
+    showstringspaces=false, 
+    showtabs=false,
+    stepnumber=1,
+    tabsize=4,
+    title=\lstname
+}
+\lstset{upquote=true}
+\renewcommand\thesubsection{\alph{subsection}}
+\usepackage{graphicx}
+\title{CS313, Assignment - 2}
 \author{Shashank P, 200010048}
 \date{\today}
 
 \begin{document}
+
 \maketitle
-\section{Integrity Constants of Tables}
-\begin{tabular}{|l||*{5}{c|}}\hline
-    \backslashbox{Room}{Date}
-    &\makebox[3em]{5/31}&\makebox[3em]{6/1}&\makebox[3em]{6/2}
-    &\makebox[3em]{6/3}&\makebox[3em]{6/4}\\\hline\hline
-    Meeting Room &&&&&\\\hline
-    Auditorium &&&&&\\\hline
-    Seminar Room &&&&&\\\hline
-    \end{tabular}
+
+\section{All integrity Constraints}
+
+    \begin{table}[ht]
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{3cm}|p{1cm}|}
+\hline    
+
+\textbf{Table} & \textbf{Primary Key}  & \textbf{Domain of PK} & \textbf{Foreign key(Referencing
+table)} & \textbf{Not Null}\\
+ \hline
+ 
+classroom & building, room\_number  & varchar & - & - \\ \hline
+department & dept\_name  & varchar & - & - \\ \hline
+
+course & course\_id  & varchar & foreign key (dept\_name) \newline references \newline department & - \\ \hline
+
+instructor & ID  & varchar & foreign key (dept\_name) \newline references \newline department & name \\ \hline
+
+section & course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id) \newline references course, \newline
+	 foreign key (building, room\_number) references classroom & - \\ \hline
+	 
+teaches & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric \newline & foreign key (course\_id,sec\_id, semester, year) references \newline section,
+	 foreign key (ID) references instructor & -\\ \hline
+	 
+
+\end{tabular}
+\end{table}
+
+\clearpage
+
+    \begin{table}[ht]
+\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{3cm}|p{1cm}|}
+\hline    
+
+\textbf{Table} & \textbf{Primary Key}  & \textbf{Domain of PK} & \textbf{Foreign key(Referencing
+table)} & \textbf{Not Null}\\
+ \hline
+ 
+student & ID & varchar & foreign key (dept\_name) references department & name \\ \hline
+
+takes & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id,sec\_id, semester, year) references section,
+	 foreign key (ID) references student & - \\ \hline
+
+advisor & s\_ID  & varchar & foreign key (i\_ID) references instructor (ID), foreign key (s\_ID) references student (ID) & - \\ \hline
+
+time\_slot & time\_slot\_id, day, start\_hr, start\_min & varchar \newline varchar \newline numeric \newline numeric & - & - \\ \hline
+	 
+prereq & course\_id, prereq\_id & varchar \newline varchar & foreign key (course\_id) references course,
+	 foreign key (prereq\_id) references course & -\\ \hline
+	 
+
+\end{tabular}
+\caption{Integrity Constraints of all tables}
+\end{table}
+
+\newpage
+\section{One student's complete profile}
+\begin{lstlisting}[language=sql]
+select * from student, department, takes, advisor, instructor
+where student.name='Shankar' 
+  and student.dept_name=department.dept_name 
+  and student.ID=takes.ID 
+  and (student.ID=advisor.s_ID and instructor.ID=advisor.i_ID) 
+  and department.dept_name=instructor.dept_name;
+\end{lstlisting}
+
+\begin{figure}[!ht]
+  \includegraphics[scale=0.61]{4.png}
+  \caption{Query output}
+\end{figure}
+
+
+
+
+\section{Trying out various queries}
+
+\subsection{Table: classroom}
+\begin{lstlisting}[language=sql]
+  insert into classroom values('My Building', 1234, 1000);
+  select building, room_number from classroom where capacity>=50;
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{class.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: department}
+\begin{lstlisting}[language=sql]
+  insert into department values('My New Department', 'Watson', 200000);
+  select * from department where budget>50000;
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{dep.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: course}
+\begin{lstlisting}[language=sql]
+  insert into course values('NN-101', 'A New Course', 'History', 5);
+  select * from course where credits>4;
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{course.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: instructor}
+\begin{lstlisting}[language=sql]
+  insert into instructor values('12345', 'A New Instructor', 'Comp. Sci.', 50000);
+  select ID, name from instructor where dept_name='Comp. Sci.';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=0.75]{inst.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\newpage
+\subsection{Table: section}
+\begin{lstlisting}[language=sql]
+  insert into section values('CS-319', '3', 'Summer', 2019, 'Watson', '514', 'A');
+  select * from section where course_id='CS-319';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{sec.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: teaches}
+\begin{lstlisting}[language=sql]
+  insert into teaches values('45565', 'CS-101', '1', 'Fall', 2017);
+  select * from teaches where ID='45565';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{teaches.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: student}
+\begin{lstlisting}[language=sql]
+  insert into student values('99999', 'New Name', 'Comp. Sci.', 35);
+  select name from student where tot_cred<=40;
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{student.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: takes}
+\begin{lstlisting}[language=sql]
+  insert into takes values('44553', 'CS-347', '1', 'Fall', 2017, 'A-');
+  select * from takes where ID=='44553';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{takes.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: advisor}
+\begin{lstlisting}[language=sql]
+  insert into advisor values('19991', '22222');
+  select * from advisor where i_ID='22222';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{adv.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: time\_slot}
+\begin{lstlisting}[language=sql]
+  insert into time_slot values('NEW', 'R', 13, 31, 14, 45);
+  select * from time_slot where day='R';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{time_slot.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{Table: prereq}
+\begin{lstlisting}[language=sql]
+  insert into prereq values('PHY-101', 'BIO-101');
+  select * from prereq where prereq_id='BIO-101';
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{ew.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\section{Additional Queries}
+\subsection{}
+\begin{lstlisting}[language=sql]
+  select student.ID, student.name from student, takes, section 
+  where student.dept_name='Comp. Sci.' 
+    and student.ID=takes.ID 
+    and takes.course_id=section.course_id 
+    and section.building='Watson'
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{4_a.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+\subsection{}
+\begin{lstlisting}[language=sql]
+select ID, name 
+from student natural join takes 
+where takes.grade='A'
+
+intersect
+
+select ID, name 
+from student natural join takes 
+where takes.grade='C'
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{4_b.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+
+\subsection{}
+\begin{lstlisting}[language=sql]
+  select distinct building, room_number
+  from section natural join time_slot
+  where time_slot.day='W'
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{4_c.png}
+  \caption{Query output}
+  \end{center}
+\end{figure}
+
+
 \end{document}
