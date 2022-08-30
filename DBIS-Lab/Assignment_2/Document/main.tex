@@ -314,7 +314,7 @@ where takes.grade='C'
   \end{center}
 \end{figure}
 \subsection{Buildings that have classes on Wednesday}
-Natural join building and room\_number tables. Then select the columns with time\_slot wednesday.
+Natural join section and time\_slot tables. Then select the distinct building and room\_number with time\_slot wednesday.
 \begin{lstlisting}[language=sql]
   select distinct building, room_number
   from section natural join time_slot
