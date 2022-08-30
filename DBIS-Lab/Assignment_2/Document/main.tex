@@ -68,28 +68,28 @@
 
 \maketitle
 
-\section{All integrity Constraints}
+\section{Integrity Constraints in Univeristy Table}
 
     \begin{table}[ht]
-\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{3cm}|p{1cm}|}
-\hline    
-
+\begin{tabular}{||p{2cm}||p{2cm}||p{2cm}||p{3cm}||p{2cm}||}
+\hline  
+\hline
 \textbf{Table} & \textbf{Primary Key}  & \textbf{Domain of PK} & \textbf{Foreign key(Referencing
 table)} & \textbf{Not Null}\\
- \hline
+ \hline \hline
  
-classroom & building, room\_number  & varchar & - & - \\ \hline
-department & dept\_name  & varchar & - & - \\ \hline
+classroom & building, room\_number  & varchar & - & building, room\_number \\ \hline \hline
+department & dept\_name  & varchar & - & dept\_name \\ \hline \hline
 
-course & course\_id  & varchar & foreign key (dept\_name) \newline references \newline department & - \\ \hline
+course & course\_id  & varchar & foreign key (dept\_name) \newline references \newline department & course\_id \\ \hline
 
-instructor & ID  & varchar & foreign key (dept\_name) \newline references \newline department & name \\ \hline
+instructor & ID  & varchar & foreign key (dept\_name) \newline references \newline department & name, ID \\ \hline
 
-section & course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id) \newline references course, \newline
-	 foreign key (building, room\_number) references classroom & - \\ \hline
+section & course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id) \newline references course, \newline 
+	 foreign key (building, room\_number) references classroom & course\_id, sec\_id, semester, year \\ \hline \hline
 	 
 teaches & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric \newline & foreign key (course\_id,sec\_id, semester, year) references \newline section,
-	 foreign key (ID) references instructor & -\\ \hline
+	 foreign key (ID) references instructor & ID, course\_id, sec\_id, semester, year\\ \hline \hline
 	 
 
 \end{tabular}
@@ -98,24 +98,20 @@ teaches & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \ne
 \clearpage
 
     \begin{table}[ht]
-\begin{tabular}{|p{2cm}|p{2cm}|p{2cm}|p{3cm}|p{1cm}|}
-\hline    
-
-\textbf{Table} & \textbf{Primary Key}  & \textbf{Domain of PK} & \textbf{Foreign key(Referencing
-table)} & \textbf{Not Null}\\
- \hline
+\begin{tabular}{||p{2cm}||p{2cm}||p{2cm}||p{3cm}||p{2cm}||}
+\hline \hline
  
-student & ID & varchar & foreign key (dept\_name) references department & name \\ \hline
+student & ID & varchar & foreign key (dept\_name) references department & ID, name \\ \hline \hline
 
 takes & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id,sec\_id, semester, year) references section,
-	 foreign key (ID) references student & - \\ \hline
+	 foreign key (ID) references student & ID, course\_id, sec\_id, semester, year \\ \hline \hline
 
-advisor & s\_ID  & varchar & foreign key (i\_ID) references instructor (ID), foreign key (s\_ID) references student (ID) & - \\ \hline
+advisor & s\_ID  & varchar & foreign key (i\_ID) references instructor (ID), foreign key (s\_ID) references student (ID) & s\_ID \\ \hline \hline
 
-time\_slot & time\_slot\_id, day, start\_hr, start\_min & varchar \newline varchar \newline numeric \newline numeric & - & - \\ \hline
+time\_slot & time\_slot\_id, day, start\_hr, start\_min & varchar \newline varchar \newline numeric \newline numeric & - & time\_slot\_id, day, start\_hr, start\_min \\ \hline \hline
 	 
 prereq & course\_id, prereq\_id & varchar \newline varchar & foreign key (course\_id) references course,
-	 foreign key (prereq\_id) references course & -\\ \hline
+	 foreign key (prereq\_id) references course & course\_id, prereq\_id\\ \hline \hline
 	 
 
 \end{tabular}
@@ -124,6 +120,7 @@ prereq & course\_id, prereq\_id & varchar \newline varchar & foreign key (course
 
 \newpage
 \section{One student's complete profile}
+Select complete profile of a student named 'Shankar' from multiple tables.
 \begin{lstlisting}[language=sql]
 select * from student, department, takes, advisor, instructor
 where student.name='Shankar' 
@@ -158,7 +155,7 @@ where student.name='Shankar'
 \subsection{Table: department}
 \begin{lstlisting}[language=sql]
   insert into department values('My New Department', 'Watson', 200000);
-  select * from department where budget>50000;
+  select * from department where budget between 50000 and 210000;
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -170,7 +167,7 @@ where student.name='Shankar'
 \subsection{Table: course}
 \begin{lstlisting}[language=sql]
   insert into course values('NN-101', 'A New Course', 'History', 5);
-  select * from course where credits>4;
+  select max(credits) from course;
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -182,7 +179,7 @@ where student.name='Shankar'
 \subsection{Table: instructor}
 \begin{lstlisting}[language=sql]
   insert into instructor values('12345', 'A New Instructor', 'Comp. Sci.', 50000);
-  select ID, name from instructor where dept_name='Comp. Sci.';
+  select ID, name from instructor where dept_name in ('Comp. Sci.', "Physics");
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -195,7 +192,7 @@ where student.name='Shankar'
 \subsection{Table: section}
 \begin{lstlisting}[language=sql]
   insert into section values('CS-319', '3', 'Summer', 2019, 'Watson', '514', 'A');
-  select * from section where course_id='CS-319';
+  select * from section where course_id='CS-319' order by time_slot_id asc
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -206,8 +203,8 @@ where student.name='Shankar'
 
 \subsection{Table: teaches}
 \begin{lstlisting}[language=sql]
-  insert into teaches values('45565', 'CS-101', '1', 'Fall', 2017);
-  select * from teaches where ID='45565';
+  insert into teaches values('45565', 'CS-101', '1', 'Fall', 2016);
+  select max(year), min(year) from teaches where ID='45565';
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -218,8 +215,8 @@ where student.name='Shankar'
 
 \subsection{Table: student}
 \begin{lstlisting}[language=sql]
-  insert into student values('99999', 'New Name', 'Comp. Sci.', 35);
-  select name from student where tot_cred<=40;
+  insert into student values('99999', 'New Name', 'Comp. Sci.', 250);
+  select ID, name from student where tot_cred in (select max(tot_cred) from student);
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
@@ -240,6 +237,7 @@ where student.name='Shankar'
   \end{center}
 \end{figure}
 
+\newpage
 \subsection{Table: advisor}
 \begin{lstlisting}[language=sql]
   insert into advisor values('19991', '22222');
@@ -276,8 +274,9 @@ where student.name='Shankar'
   \end{center}
 \end{figure}
 
+\newpage
 \section{Additional Queries}
-\subsection{}
+\subsection{Stduent taking Comp. Sci. from Watson building}
 \begin{lstlisting}[language=sql]
   select student.ID, student.name from student, takes, section 
   where student.dept_name='Comp. Sci.' 
@@ -292,7 +291,7 @@ where student.name='Shankar'
   \end{center}
 \end{figure}
 
-\subsection{}
+\subsection{Student having both 'A' and 'C' grade}
 \begin{lstlisting}[language=sql]
 select ID, name 
 from student natural join takes 
@@ -310,9 +309,8 @@ where takes.grade='C'
   \caption{Query output}
   \end{center}
 \end{figure}
-
-
-\subsection{}
+\newpage
+\subsection{Buildings that have classes on Wednesday}
 \begin{lstlisting}[language=sql]
   select distinct building, room_number
   from section natural join time_slot
