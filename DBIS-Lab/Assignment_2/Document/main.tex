@@ -121,6 +121,7 @@ prereq & course\_id, prereq\_id & varchar \newline varchar & foreign key (course
 \newpage
 \section{One student's complete profile}
 Select complete profile of a student named 'Shankar' from multiple tables.
+Take a cartesian product of all tables, then combine relevent columns.
 \begin{lstlisting}[language=sql]
 select * from student, department, takes, advisor, instructor
 where student.name='Shankar' 
@@ -138,7 +139,7 @@ where student.name='Shankar'
 
 
 
-\section{Trying out various queries}
+\section{Select and Insert queries}
 
 \subsection{Table: classroom}
 \begin{lstlisting}[language=sql]
@@ -275,8 +276,10 @@ where student.name='Shankar'
 \end{figure}
 
 \newpage
-\section{Additional Queries}
+\section{Specific Queries}
 \subsection{Stduent taking Comp. Sci. from Watson building}
+Take cartesian product of student, takes and section table. \\
+Then combine relevent columns, also add condintions for department name and building.
 \begin{lstlisting}[language=sql]
   select student.ID, student.name from student, takes, section 
   where student.dept_name='Comp. Sci.' 
@@ -290,8 +293,9 @@ where student.name='Shankar'
   \caption{Query output}
   \end{center}
 \end{figure}
-
+\newpage
 \subsection{Student having both 'A' and 'C' grade}
+Find tables of student names for grade 'A' and grade 'C' and then take their \textbf{intersection}
 \begin{lstlisting}[language=sql]
 select ID, name 
 from student natural join takes 
@@ -309,8 +313,8 @@ where takes.grade='C'
   \caption{Query output}
   \end{center}
 \end{figure}
-\newpage
 \subsection{Buildings that have classes on Wednesday}
+Natural join building and room\_number tables. Then select the columns with time\_slot wednesday.
 \begin{lstlisting}[language=sql]
   select distinct building, room_number
   from section natural join time_slot
