@@ -1,0 +1,73 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{dsfont}
+\usepackage{dsfont}
+\usepackage{relsize}
+\newcommand{\bigsigma}{\makebox{\Huge\ensuremath{\sigma}}}
+\newcommand{\bigpi}{\makebox{\Huge\ensuremath{\Pi}}}
+
+% Margins
+\usepackage[top=2.5cm, left=3cm, right=3cm, bottom=4.0cm]{geometry}
+% Colour table cells
+\usepackage[table]{xcolor}
+
+% Get larger line spacing in table
+\newcommand{\tablespace}{\\[1.25mm]}
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\tstrut{\rule{0pt}{2.0ex}}         % = `top' strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+
+%%%%%%%%%%%%%%%%%
+%     Title     %
+%%%%%%%%%%%%%%%%%
+\title{Assignment-1 CS303}
+\author{Shashank P \\ 200010048}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%
+%   Problem 1   %
+%%%%%%%%%%%%%%%%%
+\section{Problem 1}
+\textbf{The Schema of the table is as shown below}
+\begin{center}
+    \textbf{Branch} (branch\_name, branch\_city, assets) \\ 
+    \textbf{customer} (customer\_name, customer\_street, customer\_city) \\ 
+    \textbf{loan} (loan\_number, branch\_name, amount) \\ 
+    \textbf{borrower} (customer\_name, loan\_number) \\ 
+    \textbf{account} (account\_number, branch\_name, balance) \\ 
+    \textbf{depositor} (customer\_name, account\_number) 
+\end{center}
+\subsection{Sub Question (a)}
+\subsubsection{Part (i)}
+\hspace{\parindent} To find the names of braches present in \textbf{Chicago}, we
+impose a condition on \textit{branch\_city} using table \textbf{Branch}. Projection
+can be used to get the names.
+
+\begin{equation}
+  \Large \bigpi_{branch\_name} (\bigsigma_{branch\_name="Chicago"}(Branch))
+\end{equation}
+
+\subsubsection{Part (ii)}
+\hspace{\parindent} To solve this we take the cross product of 
+\textbf{borrower} and \textbf{loan} tables and join them based on
+appropriate conditions. Projection is used to select the customer names.
+
+
+\begin{equation}
+    \begin{split}
+       & P_1 \leftarrow  borrower.loan\_number = loan.loan\_number \\
+       & P_2 \leftarrow  loan.branch\_name = "Downtown" \\
+       & \bigpi_{borrower.customer\_name}  (\bigsigma_{P_1 \wedge \ P_2}(borrower \times loan))
+    \end{split}
+\end{equation}
+ 
+
+\end{document}
