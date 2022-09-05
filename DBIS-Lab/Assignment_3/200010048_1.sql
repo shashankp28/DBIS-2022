@@ -56,14 +56,8 @@ from supplier natural join (
     ) 	as supplier_costs(supplier_no, total_cost);
 
 /* Part (iii) */
-select supplier_no, sup_name
-from supplier as S
-where not exists (
-    select part_no
-    from part
-    
-    except
-
-    select T.part_no
-    from supplier natural join shipment as T
-);
+with total_parts(value) as (select count(distinct part_no) from part), 
+     sup_total(supplier_no, value) as (select supplier_no,count(distinct part_no) from shipment group by supplier_no)
+select supplier.supplier_no, supplier.sup_name
+from total_parts, (supplier natural join sup_total)
+where total_parts.value=sup_total.value

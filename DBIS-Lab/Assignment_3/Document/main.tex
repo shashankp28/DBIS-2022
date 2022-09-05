@@ -1,6 +1,19 @@
 \documentclass{article}
+\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{xcolor,listings}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{dsfont}
+\usepackage{dsfont}
+\usepackage{relsize}
+\usepackage{array}
+\newcommand{\bigsigma}{\makebox{\Huge\ensuremath{\sigma}}}
+\newcommand{\bigpi}{\makebox{\Huge\ensuremath{\Pi}}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage[top=2.5cm, left=3cm, right=3cm, bottom=4.0cm]{geometry}
+\usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
 \usepackage{textcomp}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -57,275 +70,205 @@
     tabsize=4,
     title=\lstname
 }
-\lstset{upquote=true}
-\renewcommand\thesubsection{\alph{subsection}}
-\usepackage{graphicx}
-\title{CS313, Assignment - 2}
-\author{Shashank P, 200010048}
+
+\newcommand{\tablespace}{\\[1.25mm]}
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\tstrut{\rule{0pt}{2.0ex}}         % = `top' strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+\title{Assignment-1 CS303}
+\author{Shashank P \\ 200010048}
 \date{\today}
 
 \begin{document}
-
 \maketitle
 
-\section{Integrity Constraints in Univeristy Table}
 
-    \begin{table}[ht]
-\begin{tabular}{||p{2cm}||p{2cm}||p{2cm}||p{3cm}||p{2cm}||}
-\hline  
-\hline
-\textbf{Table} & \textbf{Primary Key}  & \textbf{Domain of PK} & \textbf{Foreign key(Referencing
-table)} & \textbf{Not Null}\\
- \hline \hline
- 
-classroom & building, room\_number  & varchar & - & building, room\_number \\ \hline \hline
-department & dept\_name  & varchar & - & dept\_name \\ \hline \hline
 
-course & course\_id  & varchar & foreign key (dept\_name) \newline references \newline department & course\_id \\ \hline
 
-instructor & ID  & varchar & foreign key (dept\_name) \newline references \newline department & name, ID \\ \hline
+\section{Problem 1}
+First we login as the root user. Then create a new username and passowrd.
+We can assign previlages to the new user and login as that user.
+\begin{lstlisting}[language=sql]
+  create user 'Shashank'@'localhost' identified by 'MyPassword@123';
+  grant all privileges on lab3.* to 'Shashank'@'localhost';
+  /* Logout and login as user Shashank */
+  create database lab3;
+  use lab3;
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=0.8]{new_user_1.png}
+  \caption{Creation of User and adding previleges}
+  \end{center}
+\end{figure}
 
-section & course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id) \newline references course, \newline 
-	 foreign key (building, room\_number) references classroom & course\_id, sec\_id, semester, year \\ \hline \hline
-	 
-teaches & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric \newline & foreign key (course\_id,sec\_id, semester, year) references \newline section,
-	 foreign key (ID) references instructor & ID, course\_id, sec\_id, semester, year\\ \hline \hline
-	 
 
-\end{tabular}
+\section{Problem 2}
+Based on the given information, we can come up with the following schema for the tables.
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{||C{3cm}||C{3cm}||C{3cm}||}
+  \hline  
+  \hline
+  \textbf{Table} & \textbf{Primary Key}  & \textbf{Foreign Key}\\
+  \hline \hline
+
+  part & part\_no  & -- \\
+  \hline \hline
+
+  supplier & supplier\_no  & -- \\
+  \hline \hline
+
+  shipment & shipment\_no  & part\_no ref. part supplier\_no ref. supplier \\
+  \hline \hline
+
+  \end{tabular}
+\end{center}
+\caption{Keys in the given Schema}
 \end{table}
-
-\clearpage
-
-    \begin{table}[ht]
-\begin{tabular}{||p{2cm}||p{2cm}||p{2cm}||p{3cm}||p{2cm}||}
-\hline \hline
- 
-student & ID & varchar & foreign key (dept\_name) references department & ID, name \\ \hline \hline
-
-takes & ID, course\_id, sec\_id, semester, year & varchar \newline varchar \newline varchar \newline varchar \newline numeric & foreign key (course\_id,sec\_id, semester, year) references section,
-	 foreign key (ID) references student & ID, course\_id, sec\_id, semester, year \\ \hline \hline
-
-advisor & s\_ID  & varchar & foreign key (i\_ID) references instructor (ID), foreign key (s\_ID) references student (ID) & s\_ID \\ \hline \hline
-
-time\_slot & time\_slot\_id, day, start\_hr, start\_min & varchar \newline varchar \newline numeric \newline numeric & - & time\_slot\_id, day, start\_hr, start\_min \\ \hline \hline
-	 
-prereq & course\_id, prereq\_id & varchar \newline varchar & foreign key (course\_id) references course,
-	 foreign key (prereq\_id) references course & course\_id, prereq\_id\\ \hline \hline
-	 
-
-\end{tabular}
-\caption{Integrity Constraints of all tables}
-\end{table}
-
-\newpage
-\section{One student's complete profile}
-Select complete profile of a student named 'Shankar' from multiple tables.
-Take a cartesian product of all tables, then combine relevent columns.
 \begin{lstlisting}[language=sql]
-select * from student, department, takes, advisor, instructor
-where student.name='Shankar' 
-  and student.dept_name=department.dept_name 
-  and student.ID=takes.ID 
-  and (student.ID=advisor.s_ID and instructor.ID=advisor.i_ID) 
-  and department.dept_name=instructor.dept_name;
-\end{lstlisting}
-
-\begin{figure}[!ht]
-  \includegraphics[scale=0.61]{4.png}
-  \caption{Query output}
-\end{figure}
-
-
-
-
-\section{Select and Insert queries}
-
-\subsection{Table: classroom}
-\begin{lstlisting}[language=sql]
-  insert into classroom values('My Building', 1234, 1000);
-  select building, room_number from classroom where capacity>=50;
+create table part(
+    part_no int,
+    part_name varchar(50) not null,
+    color varchar(10),
+    weight numeric(10, 5) check(weight>0),
+    primary key (part_no)
+);
+create table supplier(
+    supplier_no int,
+    sup_name varchar(80) not null,
+    city varchar(25),
+    bank varchar(25),
+    primary key (supplier_no)
+);
+create table shipment(
+    shipment_no int,
+    part_no int,
+    supplier_no int,
+    date DATE,
+    quantity int check(quantity>=0),
+    price numeric(15, 5) check(price>=0),
+    primary key (shipment_no),
+    foreign key (part_no) references part(part_no),
+    foreign key (supplier_no) references supplier(supplier_no)
+);
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
-  \includegraphics[scale=1]{class.png}
-  \caption{Query output}
+  \includegraphics[scale=0.65]{add_tables.png}
+  \caption{Adding relevant tables}
   \end{center}
 \end{figure}
 
-\subsection{Table: department}
-\begin{lstlisting}[language=sql]
-  insert into department values('My New Department', 'Watson', 200000);
-  select * from department where budget between 50000 and 210000;
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{dep.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
 
-\subsection{Table: course}
+\section{Problem 3}
+I have added one tuple to each table keeping in mind refrencial constraints.
 \begin{lstlisting}[language=sql]
-  insert into course values('NN-101', 'A New Course', 'History', 5);
-  select max(credits) from course;
+insert into part values(15, 'Rubber', 'red', '100');
+insert into supplier values(10, 'John', 'Paris', 'Citi-Bank');
+insert into shipment values(20, 15, 10, '2022-09-03', 50, 10);
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
-  \includegraphics[scale=1]{course.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
-
-\subsection{Table: instructor}
-\begin{lstlisting}[language=sql]
-  insert into instructor values('12345', 'A New Instructor', 'Comp. Sci.', 50000);
-  select ID, name from instructor where dept_name in ('Comp. Sci.', "Physics");
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=0.75]{inst.png}
-  \caption{Query output}
+  \includegraphics[scale=1]{added_one_tuple.png}
+  \caption{Adding one tuple per table}
   \end{center}
 \end{figure}
 
 \newpage
-\subsection{Table: section}
+\section{Problem 4}
+Inserted multiple data points into each table. Referencial and Integrety constraints
+were taken care of before inserting.
 \begin{lstlisting}[language=sql]
-  insert into section values('CS-319', '3', 'Summer', 2019, 'Watson', '514', 'A');
-  select * from section where course_id='CS-319' order by time_slot_id asc
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{sec.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
+insert into part values(30, 'Clip', 'yellow', '20');
+insert into part values(45, 'Holder', 'red', '120');
+insert into part values(60, 'Bolt', 'gray', '70');
 
-\subsection{Table: teaches}
-\begin{lstlisting}[language=sql]
-  insert into teaches values('45565', 'CS-101', '1', 'Fall', 2016);
-  select max(year), min(year) from teaches where ID='45565';
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{teaches.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
+insert into supplier values(25, 'Jane', 'Boston', 'American Bank');
+insert into supplier values(40, 'Jack', 'New York', 'Western Union');
 
-\subsection{Table: student}
-\begin{lstlisting}[language=sql]
-  insert into student values('99999', 'New Name', 'Comp. Sci.', 250);
-  select ID, name from student where tot_cred in (select max(tot_cred) from student);
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{student.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
+insert into shipment values(101, 15, 10, '2022-12-03', 18, 12.3);
+insert into shipment values(102, 15, 25, '2020-03-04', 45, 15.6);
+insert into shipment values(103, 15, 25, '2022-01-06', 150, 2.56);
+insert into shipment values(104, 15, 40, '2020-05-12', 60, 24);
 
-\subsection{Table: takes}
-\begin{lstlisting}[language=sql]
-  insert into takes values('44553', 'CS-347', '1', 'Fall', 2017, 'A-');
-  select * from takes where ID=='44553';
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{takes.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
+insert into shipment values(105, 30, 10, '2021-05-25', 100, 65);
+insert into shipment values(106, 30, 40, '2022-04-16', 120, 12.35);
+insert into shipment values(107, 30, 25, '2022-03-11', 50, 1.22);
+insert into shipment values(108, 30, 10, '2021-02-28', 80, 90);
 
+insert into shipment values(109, 45, 10, '2020-11-27', 95, 45.12);
+insert into shipment values(110, 45, 10, '2022-10-14', 11, 120);
+insert into shipment values(111, 45, 25, '2021-09-07', 154, 0.5);
+insert into shipment values(112, 45, 25, '2022-09-01', 20, 1.3);
+
+insert into shipment values(113, 60, 25, '2020-05-05', 8, 65);
+insert into shipment values(114, 60, 40, '2021-06-04', 1, 1200);
+insert into shipment values(115, 60, 40, '2021-08-21', 60, 100);
+insert into shipment values(116, 60, 25, '2022-12-18', 90, 0.30);
+\end{lstlisting}
 \newpage
-\subsection{Table: advisor}
-\begin{lstlisting}[language=sql]
-  insert into advisor values('19991', '22222');
-  select * from advisor where i_ID='22222';
-\end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
-  \includegraphics[scale=1]{adv.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
-
-\subsection{Table: time\_slot}
-\begin{lstlisting}[language=sql]
-  insert into time_slot values('NEW', 'R', 13, 31, 14, 45);
-  select * from time_slot where day='R';
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{time_slot.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
-
-\subsection{Table: prereq}
-\begin{lstlisting}[language=sql]
-  insert into prereq values('PHY-101', 'BIO-101');
-  select * from prereq where prereq_id='BIO-101';
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{ew.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
-
-\newpage
-\section{Specific Queries}
-\subsection{Stduent taking Comp. Sci. from Watson building}
-Take cartesian product of student, takes and section table. \\
-Then combine relevent columns, also add condintions for department name and building.
-\begin{lstlisting}[language=sql]
-  select student.ID, student.name from student, takes, section 
-  where student.dept_name='Comp. Sci.' 
-    and student.ID=takes.ID 
-    and takes.course_id=section.course_id 
-    and section.building='Watson'
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{4_a.png}
-  \caption{Query output}
+  \includegraphics[scale=1]{added_multiple_data_4.png}
+  \caption{Adding multiple rows to each table}
   \end{center}
 \end{figure}
 \newpage
-\subsection{Student having both 'A' and 'C' grade}
-Find tables of student names for grade 'A' and grade 'C' and then take their \textbf{intersection}
+
+\section{Problem 5}
+
+\subsection{Part (i)}
+Firstly we find the natural join of all 3 tables. From this we can select 
+names and IDs of suppliers who have sold parts with colour red.
 \begin{lstlisting}[language=sql]
-select ID, name 
-from student natural join takes 
-where takes.grade='A'
-
-intersect
-
-select ID, name 
-from student natural join takes 
-where takes.grade='C'
+select distinct supplier.supplier_no, supplier.sup_name
+from (shipment natural join part) natural join supplier
+where part.color='red';
 \end{lstlisting}
 \begin{figure}[!ht]
   \begin{center}
-  \includegraphics[scale=1]{4_b.png}
-  \caption{Query output}
-  \end{center}
-\end{figure}
-\subsection{Buildings that have classes on Wednesday}
-Natural join section and time\_slot tables. Then select the distinct building and room\_number with time\_slot wednesday.
-\begin{lstlisting}[language=sql]
-  select distinct building, room_number
-  from section natural join time_slot
-  where time_slot.day='W'
-\end{lstlisting}
-\begin{figure}[!ht]
-  \begin{center}
-  \includegraphics[scale=1]{4_c.png}
-  \caption{Query output}
+  \includegraphics[scale=1]{red_supply.png}
+  \caption{Suppliers who have supplied red parts}
   \end{center}
 \end{figure}
 
+\subsection{Part (ii)}
+We can group the shipment table by \textit{supplier\_id}. We can use the
+aggregate \textit{sum} function to get the total cost. Then to get the
+the names of the suppliers, we perform a natural join with \textbf{supplier} table.
+\begin{lstlisting}[language=sql]
+select supplier.supplier_no, supplier.sup_name, supplier_costs.total_cost, supplier.bank
+from supplier natural join (
+        select shipment.supplier_no, sum(shipment.quantity * shipment.price)
+        from shipment natural join supplier
+        group by shipment.supplier_no
+    ) 	as supplier_costs(supplier_no, total_cost);
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=0.57]{cost_per_supplier.png}
+  \caption{Total cost of each supplier}
+  \end{center}
+\end{figure}
+
+\subsection{Part (iii)}
+We can group the shipment table by \textit{supplier\_id}. We can use the
+aggregate \textit{sum} function to get the total cost. Then to get the
+the names of the suppliers, we perform a natural join with \textbf{supplier} table.
+\begin{lstlisting}[language=sql]
+with total_parts(value) as (select count(distinct part_no) from part), 
+    sup_total(supplier_no, value) as (select supplier_no,count(distinct part_no) from shipment group by supplier_no)
+select supplier.supplier_no, supplier.sup_name
+from total_parts, (supplier natural join sup_total)
+where total_parts.value=sup_total.value
+\end{lstlisting}
+\begin{figure}[!ht]
+  \begin{center}
+  \includegraphics[scale=1]{5c.png}
+  \caption{Supplier who supplied all parts}
+  \end{center}
+\end{figure}
 
 \end{document}
