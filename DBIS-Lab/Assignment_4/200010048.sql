@@ -3,7 +3,7 @@ from (instructor natural join teaches), course
 where course.course_id=teaches.course_id 
 	and instructor.dept_name='Comp. Sci.'
 	and teaches.year=2009 
-    and course.dept_name='Comp. Sci.'
+    and course.dept_name='Civil'
 order by instructor.name ASC;
 
 
@@ -16,13 +16,14 @@ update instructor
 set salary = salary*1.1
 where dept_name in (select department.dept_name 
                     from department 
-                    where departmenet.budget>900000);
+                    where departmenet.budget>90000);
 
 
 select count(ID), course_id
-from student natural join takes
-where takes.course_id like "CS%"
+from takes natural join course
+where course.dept_name="Comp. Sci."
     and takes.year=2009
     and takes.semester="Fall"
 group by course_id
-having count(ID)>2; 
+having count(ID)>2
+order by course_id ASC; 
