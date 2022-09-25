@@ -1,0 +1,236 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{dsfont}
+\usepackage{dsfont}
+\usepackage{relsize}
+\usepackage{array}
+\newcommand{\bigsigma}{\makebox{\Huge\ensuremath{\sigma}}}
+\newcommand{\bigpi}{\makebox{\Huge\ensuremath{\Pi}}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\usepackage[top=2.5cm, left=3cm, right=3cm, bottom=4.0cm]{geometry}
+\usepackage[table]{xcolor}
+
+\newcommand{\tablespace}{\\[1.25mm]}
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\tstrut{\rule{0pt}{2.0ex}}         % = `top' strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+\title{Assignment-1 CS303}
+\author{Shashank P \\ 200010048}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+
+
+\section{Problem 1}
+\textbf{The Schema of the table is as shown below}
+\begin{center}
+    \textbf{Branch} (branch\_name, branch\_city, assets) \\ 
+    \textbf{customer} (customer\_name, customer\_street, customer\_city) \\ 
+    \textbf{loan} (loan\_number, branch\_name, amount) \\ 
+    \textbf{borrower} (customer\_name, loan\_number) \\ 
+    \textbf{account} (account\_number, branch\_name, balance) \\ 
+    \textbf{depositor} (customer\_name, account\_number) 
+\end{center}
+
+
+\subsection{Sub Question (a)}
+
+\subsubsection{Part (i)}
+\hspace{\parindent} To find the names of braches present in \textbf{Chicago}, we
+impose a condition on \textit{branch\_city} using table \textbf{Branch}. Projection
+can be used to get the names.
+\begin{equation}
+  \Large \bigpi_{branch\_name} (\bigsigma_{branch\_name = "Chicago"}(Branch))
+\end{equation}
+
+\subsubsection{Part (ii)}
+\hspace{\parindent} To solve this we take the cross product of 
+\textbf{borrower} and \textbf{loan} tables and join them based on
+appropriate conditions. Projection is used to select the customer names.
+\begin{equation}
+  \Large 
+    \begin{split}
+       & P_1 \equiv  borrower.loan\_number = loan.loan\_number \\
+       & P_2 \equiv  loan.branch\_name = "Downtown" \\
+       & \bigpi_{borrower.customer\_name}  (\bigsigma_{P_1 \wedge \ P_2}(borrower \times loan))
+    \end{split}
+\end{equation}
+ 
+\newpage
+
+
+\subsection{Sub Question (b)}
+In this question I am assuming the following
+
+\begin{itemize}
+  \item \textit{customer\_name} in \textbf{Customer} table are unique.
+  \item Multiple Customers can be associated with the same loan (Joint Loans).
+  \item One customer can take up multiple loans. 
+  \item Multiple people can open one acccount (Joint Account).
+  \item One person can have only a single account number (As bank is the same in this case).
+\end{itemize}
+
+  \begin{table}[ht]
+    \centering
+    \begin{center}
+    \begin{tabular}{||C{3cm}||C{3cm}||C{3cm}||}
+    \hline  
+    \hline
+    \textbf{Table} & \textbf{Primary Key}  & \textbf{Foreign Key}\\
+    \hline \hline
+
+    Branch & branch\_name  & -- \\
+    \hline \hline
+
+    customer & customer\_name  & -- \\
+    \hline \hline
+
+    loan & loan\_number  & branch\_name ref. Branch \\
+    \hline \hline
+
+    borrower & (customer\_name, loan\_number)  & customer\_name ref. customer loan\_number ref. loan \\
+    \hline \hline
+
+    account & account\_number  & branch\_name ref. Branch \\
+    \hline \hline
+
+    depositor & customer\_name  & customer\_name ref. customer acccount\_number ref. account \\
+    \hline \hline
+
+    \end{tabular}
+  \end{center}
+  \caption{Keys in the given Schema}
+  \end{table}
+
+\subsection{Sub Question (c)}
+\subsubsection{Part (i)}
+\hspace{\parindent} First use the select operator then project the \textit{loan\_numebr} on \textbf{loan} table.
+
+
+\begin{equation}
+  \Large \bigpi_{loan\_number} (\bigsigma_{amount>10000}(loan))
+\end{equation}
+
+\subsubsection{Part (ii)}
+\hspace{\parindent} We first join \textit{account} and \textit{depositer}
+tables. Then we use the select and project operator.
+
+
+\begin{equation}
+  \Large 
+    \begin{split}
+       & P_1 \equiv  account.account\_number = depositor.account\_number \\
+       & P_2 \equiv  account.balance > 6000 \\
+       & \bigpi_{depositor.customer\_name}  (\bigsigma_{P_1 \wedge \ P_2}(account \times depositor))
+    \end{split}
+\end{equation}
+
+\subsubsection{Part (iii)}
+\hspace{\parindent} Similar to previous question, but we have another condition on branch\_name.
+
+
+\begin{equation}
+  \Large 
+    \begin{split}
+       & P_1 \equiv  account.account\_number = depositor.account\_number \\
+       & P_2 \equiv  account.balance > 6000 \\
+       & P_3 \equiv  account.branch\_name = "Uptown" \\
+       & \bigpi_{depositor.customer\_name}  (\bigsigma_{P_1 \ \wedge \ P_2 \ \wedge \ P_3 }(account \times depositor))
+    \end{split}
+\end{equation}
+
+\section{Problem 2}
+\subsection{Part (i)}
+Selecting users whose age is more that 25.
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{|C{4cm}|}
+  \hline
+  \textbf{Name} \\  \hline 
+  Victor \\   \hline
+  Jane \\   \hline
+  \end{tabular}
+\end{center}
+\caption{Output}
+\end{table}
+
+
+\subsection{Part (ii)}
+Select users whose Id is greater than 2 or whose age is not 31.
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{3cm}|C{2cm}|}
+  \hline
+  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} \\  \hline 
+  1      & John        & 25   & Male  & 1 & 3 \\   \hline
+  2      & Sara        & 20   & Female  & 3 & 4 \\   \hline
+  3      & Victor        & 31   & Male  & 2 & 5 \\   \hline
+  4      & Jane        & 27   & Female  & 1 & 3 \\   \hline
+  \end{tabular}
+\end{center}
+\caption{Output}
+\end{table}
+
+\newpage
+\subsection{Part (iii)}
+Join tables \textit{User} and \textit{Occupation}.
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{|C{1cm}|C{2cm}|C{1cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|}
+  \hline
+  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} & \textbf{OccupationId} & \textbf{OccupationName} \\  \hline 
+  1      & John        & 25   & Male  & 1 & 3 & 1 & Software Engineer \\   \hline
+  2      & Sara        & 20   & Female  & 3 & 4 & 3 & Pharmacist \\   \hline
+  3      & Victor        & 31   & Male  & 2 & 5 & 2 & Accountant \\   \hline
+  4      & Jane        & 27   & Female  & 1 & 3 & 3 & Software Engineer \\   \hline
+  \end{tabular}
+\end{center}
+\caption{Output}
+\end{table}
+
+\subsection{Part (iv)}
+Natural join tables \textit{User}, \textit{Occupation} and \textit{City}.
+
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{|C{1cm}|C{2cm}|C{1cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|}
+  \hline
+  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} & \textbf{OccupationName} & \textbf{CityName} \\  \hline 
+  1      & John        & 25   & Male  & 1 & 3 & Software Engineer & Boston \\   \hline
+  2      & Sara        & 20   & Female  & 3 & 4 & Pharmacist & New York \\   \hline
+  3      & Victor        & 31   & Male  & 2 & 5 & Accountant & Toronto \\   \hline
+  4      & Jane        & 27   & Female  & 1 & 3 & Software Engineer & Boston \\   \hline
+  \end{tabular}
+\end{center}
+\caption{Output}
+\end{table}
+
+\subsection{Part (v)}
+Name and gender of users who live in Boston.
+
+\begin{table}[ht]
+  \centering
+  \begin{center}
+  \begin{tabular}{|C{3cm}|C{3cm}|}
+  \hline
+  \textbf{Name} & \textbf{Gender} \\ \hline 
+  John        & Male   \\   \hline
+  Jane        & Female \\   \hline
+  \end{tabular}
+\end{center}
+\caption{Output}
+\end{table}
+
+\end{document}

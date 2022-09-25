@@ -26,4 +26,4 @@ where course.dept_name="Comp. Sci."
     and takes.semester="Fall"
 group by course_id
 having count(ID)>2
-order by course_id ASC; 
+order by course_id ASC;
