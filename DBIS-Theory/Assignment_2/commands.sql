@@ -9,13 +9,12 @@ select ID, score,
 from marks
 
 -- Question 1 (b)
-select grade, count(*) as grade_count,
-    case 
+select case 
         when score>=80 then 'A'
         when score>=60 then 'B'
         when score>=40 then 'C'
         else 'F'
-    end as grade
+    end as grade, count(*) as grade_count
 from marks
 group by grade
 
