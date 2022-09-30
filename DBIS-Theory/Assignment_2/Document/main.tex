@@ -1,5 +1,4 @@
 \documentclass{article}
-
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb}
@@ -14,12 +13,69 @@
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \usepackage[top=2.5cm, left=3cm, right=3cm, bottom=4.0cm]{geometry}
 \usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xstring}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{ltgray}{rgb}{0.5,0.5,0.5}
+
+\makeatletter
+\newif\ifcolname
+\colnamefalse
+
+\def\keywordcheck{%
+\IfStrEq*{\the\lst@token}{select}{\global\colnametrue}{}%
+\IfStrEq*{\the\lst@token}{where}{\global\colnametrue}{}%
+\IfStrEq*{\the\lst@token}{from}{\global\colnamefalse}{}%
+\color{blue}%
+}
+\def\setidcolor{%
+\ifcolname\color{purple}\else\color{black}\fi%
+}
+\makeatother
+
+\lstset{%
+    backgroundcolor=\color{white},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{dkgreen},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    frame=single,
+    keepspaces=true,
+    language=SQL,
+    otherkeywords={is},
+    morekeywords={*,modify,MODIFY,...},
+    keywordstyle=\keywordcheck,
+    identifierstyle=\setidcolor,
+    numbers=left,
+    numbersep=15pt,
+    numberstyle=\tiny,
+    rulecolor=\color{ltgray},
+    showspaces=false,
+    showstringspaces=false, 
+    showtabs=false,
+    stepnumber=1,
+    tabsize=4,
+    title=\lstname
+}
 
 \newcommand{\tablespace}{\\[1.25mm]}
 \newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
 \newcommand\tstrut{\rule{0pt}{2.0ex}}         % = `top' strut
 \newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
-\title{Assignment-1 CS303}
+\title{Assignment-2 CS303}
 \author{Shashank P \\ 200010048}
 \date{\today}
 
@@ -30,207 +86,222 @@
 
 
 \section{Problem 1}
-\textbf{The Schema of the table is as shown below}
-\begin{center}
-    \textbf{Branch} (branch\_name, branch\_city, assets) \\ 
-    \textbf{customer} (customer\_name, customer\_street, customer\_city) \\ 
-    \textbf{loan} (loan\_number, branch\_name, amount) \\ 
-    \textbf{borrower} (customer\_name, loan\_number) \\ 
-    \textbf{account} (account\_number, branch\_name, balance) \\ 
-    \textbf{depositor} (customer\_name, account\_number) 
-\end{center}
+Suppose that we have a relation marks(ID, score) and we wish to assign grades to students based on the
+score as follows: grade F if score < 40,grade C if 40 $\leq$ score $<$ 60, grade B if 60 $\leq$ score < 80, and grade
+A if 80 $\leq$ score. Write SQL queries to do the following:
+\subsection{Part (a)}
+Display the grade for each student, based on the marks relation.
+\begin{lstlisting}[language=sql]
+select ID, score,
+  case 
+      when score>=80 then 'A'
+      when score>=60 then 'B'
+      when score>=40 then 'C'
+      else 'F'
+  end as grade
+from marks
+\end{lstlisting}
 
+\subsection{Part (b)}
+Display the grade for each student, based on the marks relation.
+\begin{lstlisting}[language=sql]
+select case 
+    when score>=80 then 'A'
+    when score>=60 then 'B'
+    when score>=40 then 'C'
+    else 'F'
+  end as grade, count(*) as grade_count
+from marks
+group by grade
+\end{lstlisting}
 
-\subsection{Sub Question (a)}
-
-\subsubsection{Part (i)}
-\hspace{\parindent} To find the names of braches present in \textbf{Chicago}, we
-impose a condition on \textit{branch\_city} using table \textbf{Branch}. Projection
-can be used to get the names.
-\begin{equation}
-  \Large \bigpi_{branch\_name} (\bigsigma_{branch\_name = "Chicago"}(Branch))
-\end{equation}
-
-\subsubsection{Part (ii)}
-\hspace{\parindent} To solve this we take the cross product of 
-\textbf{borrower} and \textbf{loan} tables and join them based on
-appropriate conditions. Projection is used to select the customer names.
-\begin{equation}
-  \Large 
-    \begin{split}
-       & P_1 \equiv  borrower.loan\_number = loan.loan\_number \\
-       & P_2 \equiv  loan.branch\_name = "Downtown" \\
-       & \bigpi_{borrower.customer\_name}  (\bigsigma_{P_1 \wedge \ P_2}(borrower \times loan))
-    \end{split}
-\end{equation}
- 
 \newpage
-
-
-\subsection{Sub Question (b)}
-In this question I am assuming the following
-
-\begin{itemize}
-  \item \textit{customer\_name} in \textbf{Customer} table are unique.
-  \item Multiple Customers can be associated with the same loan (Joint Loans).
-  \item One customer can take up multiple loans. 
-  \item Multiple people can open one acccount (Joint Account).
-  \item One person can have only a single account number (As bank is the same in this case).
-\end{itemize}
-
-  \begin{table}[ht]
-    \centering
-    \begin{center}
-    \begin{tabular}{||C{3cm}||C{3cm}||C{3cm}||}
-    \hline  
-    \hline
-    \textbf{Table} & \textbf{Primary Key}  & \textbf{Foreign Key}\\
-    \hline \hline
-
-    Branch & branch\_name  & -- \\
-    \hline \hline
-
-    customer & customer\_name  & -- \\
-    \hline \hline
-
-    loan & loan\_number  & branch\_name ref. Branch \\
-    \hline \hline
-
-    borrower & (customer\_name, loan\_number)  & customer\_name ref. customer loan\_number ref. loan \\
-    \hline \hline
-
-    account & account\_number  & branch\_name ref. Branch \\
-    \hline \hline
-
-    depositor & customer\_name  & customer\_name ref. customer acccount\_number ref. account \\
-    \hline \hline
-
-    \end{tabular}
-  \end{center}
-  \caption{Keys in the given Schema}
-  \end{table}
-
-\subsection{Sub Question (c)}
-\subsubsection{Part (i)}
-\hspace{\parindent} First use the select operator then project the \textit{loan\_numebr} on \textbf{loan} table.
-
-
-\begin{equation}
-  \Large \bigpi_{loan\_number} (\bigsigma_{amount>10000}(loan))
-\end{equation}
-
-\subsubsection{Part (ii)}
-\hspace{\parindent} We first join \textit{account} and \textit{depositer}
-tables. Then we use the select and project operator.
-
-
-\begin{equation}
-  \Large 
-    \begin{split}
-       & P_1 \equiv  account.account\_number = depositor.account\_number \\
-       & P_2 \equiv  account.balance > 6000 \\
-       & \bigpi_{depositor.customer\_name}  (\bigsigma_{P_1 \wedge \ P_2}(account \times depositor))
-    \end{split}
-\end{equation}
-
-\subsubsection{Part (iii)}
-\hspace{\parindent} Similar to previous question, but we have another condition on branch\_name.
-
-
-\begin{equation}
-  \Large 
-    \begin{split}
-       & P_1 \equiv  account.account\_number = depositor.account\_number \\
-       & P_2 \equiv  account.balance > 6000 \\
-       & P_3 \equiv  account.branch\_name = "Uptown" \\
-       & \bigpi_{depositor.customer\_name}  (\bigsigma_{P_1 \ \wedge \ P_2 \ \wedge \ P_3 }(account \times depositor))
-    \end{split}
-\end{equation}
-
 \section{Problem 2}
-\subsection{Part (i)}
-Selecting users whose age is more that 25.
-\begin{table}[ht]
-  \centering
-  \begin{center}
-  \begin{tabular}{|C{4cm}|}
-  \hline
-  \textbf{Name} \\  \hline 
-  Victor \\   \hline
-  Jane \\   \hline
-  \end{tabular}
-\end{center}
-\caption{Output}
-\end{table}
+Using tables given in the question, write SQL queries for the following:
+\subsection{Part (a)}
+Give all employees of “First Bank Corporation” a 10 percent raise.
+\begin{lstlisting}[language=sql]
+update works
+set salary = salary*1.1
+where company_name='First Bank Corporation'
+\end{lstlisting}
 
+\subsection{Part (b)}
+Give all managers of “First Bank Corporation” a 10 percent raise.
+\begin{lstlisting}[language=sql]
+update works
+set salary = salary*1.1
+where employee_name in 
+    (select distinct M.manager_name
+    from works as W inner join manages as M
+    on W.employee_name=M.manager_name
+    where W.company_name='First Bank Corporation')
+\end{lstlisting}
 
-\subsection{Part (ii)}
-Select users whose Id is greater than 2 or whose age is not 31.
-\begin{table}[ht]
-  \centering
-  \begin{center}
-  \begin{tabular}{|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{3cm}|C{2cm}|}
-  \hline
-  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} \\  \hline 
-  1      & John        & 25   & Male  & 1 & 3 \\   \hline
-  2      & Sara        & 20   & Female  & 3 & 4 \\   \hline
-  3      & Victor        & 31   & Male  & 2 & 5 \\   \hline
-  4      & Jane        & 27   & Female  & 1 & 3 \\   \hline
-  \end{tabular}
-\end{center}
-\caption{Output}
-\end{table}
+\subsection{Part (c)}
+Delete all tuples in the works relation for employees of “Small Bank Corporation”.
+\begin{lstlisting}[language=sql]
+delete from works
+where company_name='Small Bank Corporation'
+\end{lstlisting}
+
+\subsection{Part (d)}
+Find all employees in the database who live in the same cities as the companies for which they work.
+\begin{lstlisting}[language=sql]
+select distinct employee.employee_name
+from employee, works, company
+where employee.city=company.city
+    and employee.employee_name=works.employee_name
+    and works.company_name=company.company_name
+\end{lstlisting}
 
 \newpage
-\subsection{Part (iii)}
-Join tables \textit{User} and \textit{Occupation}.
-\begin{table}[ht]
-  \centering
-  \begin{center}
-  \begin{tabular}{|C{1cm}|C{2cm}|C{1cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|}
-  \hline
-  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} & \textbf{OccupationId} & \textbf{OccupationName} \\  \hline 
-  1      & John        & 25   & Male  & 1 & 3 & 1 & Software Engineer \\   \hline
-  2      & Sara        & 20   & Female  & 3 & 4 & 3 & Pharmacist \\   \hline
-  3      & Victor        & 31   & Male  & 2 & 5 & 2 & Accountant \\   \hline
-  4      & Jane        & 27   & Female  & 1 & 3 & 3 & Software Engineer \\   \hline
-  \end{tabular}
-\end{center}
-\caption{Output}
-\end{table}
+\subsection{Part (e)}
+Find all employees in the database who live in the same cities and on the same streets as do their
+managers.
+\begin{lstlisting}[language=sql]
+with manager(manager_name, street, city) as
+  (select employee_name, street, city
+  from employee
+  where employee_name in
+      (select distinct T.manager_name
+      from manages as T))
+select distinct E.employee_name
+from employee as E, manages as Ms, manager as Mr
+where E.employee_name=Ms.employee_name
+  and Mr.manager_name=Ms.manager_name
+  and E.street=Mr.street
+  and E.city=Mr.city
+\end{lstlisting}
 
-\subsection{Part (iv)}
-Natural join tables \textit{User}, \textit{Occupation} and \textit{City}.
+\subsection{Part (f)}
+Find all employees who earn more than the average salary of all employees of their company.
+\begin{lstlisting}[language=sql]
+with avg_salary(c_name, val) as
+  (select company_name, avg(salary)
+  from works
+  group by company_name)
+select distinct W.employee_name
+from works as W inner join avg_salary
+on W.company_name=avg_salary.c_name 
+where W.salary>avg_salary.val
+\end{lstlisting}
 
-\begin{table}[ht]
-  \centering
-  \begin{center}
-  \begin{tabular}{|C{1cm}|C{2cm}|C{1cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|C{2cm}|}
-  \hline
-  \textbf{Id} & \textbf{Name}  & \textbf{Age} & \textbf{Gender} & \textbf{OccupationId} & \textbf{CityId} & \textbf{OccupationName} & \textbf{CityName} \\  \hline 
-  1      & John        & 25   & Male  & 1 & 3 & Software Engineer & Boston \\   \hline
-  2      & Sara        & 20   & Female  & 3 & 4 & Pharmacist & New York \\   \hline
-  3      & Victor        & 31   & Male  & 2 & 5 & Accountant & Toronto \\   \hline
-  4      & Jane        & 27   & Female  & 1 & 3 & Software Engineer & Boston \\   \hline
-  \end{tabular}
-\end{center}
-\caption{Output}
-\end{table}
+\subsection{Part (g)}
+Find the company that has the smallest payroll.
+\begin{lstlisting}[language=sql]
+with salary_sum(c_name, val) as
+  (select company_name, sum(salary)
+  from works
+  group by company_name)
+with min_sum(val) as
+  (select min(val)
+  from salary_sum)
+select distinct salary_sum.c_name
+from salary_sum, min_sum
+where salary_sum.val=min_sum.val
+\end{lstlisting}
 
-\subsection{Part (v)}
-Name and gender of users who live in Boston.
+\newpage
+\subsection{Part (h)}
+Find the company that has the most employees.
+\begin{lstlisting}[language=sql]
+with pay_counts(c_name, val) as
+  (select company_name, count(distinct employee_name)
+  from works
+  group by company_name)
+with max_count(val) as
+  (select max(val)
+  from pay_counts)
+select distinct pay_counts.c_name
+from pay_counts, max_count
+where pay_counts.val=max_count.val
+\end{lstlisting}
 
-\begin{table}[ht]
-  \centering
-  \begin{center}
-  \begin{tabular}{|C{3cm}|C{3cm}|}
-  \hline
-  \textbf{Name} & \textbf{Gender} \\ \hline 
-  John        & Male   \\   \hline
-  Jane        & Female \\   \hline
-  \end{tabular}
-\end{center}
-\caption{Output}
-\end{table}
+\subsection{Part (i)}
+Find those companies whose employees earn a higher salary, on average, than the average salary at
+“First Bank Corporation”.
+\begin{lstlisting}[language=sql]
+with FBC_avg(val) as
+  (select avg(salary)
+  from works
+  where company_name='First Bank Corporation')
+with avg_salary(c_name, val) as
+  (select company_name, avg(salary)
+  from works
+  group by company_name)
+select distinct c_name
+from avg_salary, FBC_avg
+where avg_salary.val>FBC_avg.val
+\end{lstlisting}
+
+\subsection{Part (j)}
+Modify the database so that “Jones” now lives in “Newtown”.
+\begin{lstlisting}[language=sql]
+update employee
+set city='Newtown'
+where employee_name='Jones'
+\end{lstlisting}
+
+\newpage
+\subsection{Part (k)}
+Give all managers of “First Bank Corporation” a 10 percent raise unless the salary becomes greater
+than \$100,000; in such cases, give only a 3 percent raise.
+\begin{lstlisting}[language=sql]
+update works
+set salary = case
+    when salary*1.1>100000 then salary*1.03
+    else salary*1.1
+    end
+where employee_name in 
+    (select distinct M.manager_name
+    from works as W inner join manages as M
+    on W.employee_name=M.manager_name
+    where W.company_name='First Bank Corporation')
+\end{lstlisting}
+
+\section{Problem 3}
+Write a query to get the list of users who took a training lesson more than once in the same day, grouped by
+user and training lesson, each ordered from the most recent lesson date to oldest date.
+\begin{lstlisting}[language=sql]
+select *
+from users natural join 
+    (select user_id, training_id, training_date
+    from training_details
+    group by user_id, training_id, training_date
+    having count(*)>1)
+order by training_date desc
+\end{lstlisting}
+
+\section{Problem 4}
+What is the meaning of the query given below? 
+\begin{lstlisting}[language=sql]
+  SELECT * FROM runners WHERE id NOT IN (SELECT winner_id FROM races)
+\end{lstlisting}
+The \textbf{meaning of the query} is to get the details of all those runners who did not win in any of the races.
+But it will return as empty set as \textbf{NOT IN} key word is used,
+which will return an \textbf{empty set} if any value in the sub query is \textbf{NULL}.
+
+\section{Problem 5}
+Consider books and publishers table. A publisher may have zero or many books while a book may belong to zero or one publisher. The relationship
+between the books table and the publishers table is zero-to-many.
+\newpage
+\subsection{Part (a)}
+A query which will return information about books with publishers, irrespective of whether a book
+has associated publishers or not.
+\begin{lstlisting}[language=sql]
+select *
+from books left outer join publishers
+on books.publisher_id=publishers.publisher_id
+\end{lstlisting}
+
+\subsection{Part (b)}
+A query which will return information about books with publishers, irrespective of whether the
+publisher has any published books or not.
+\begin{lstlisting}[language=sql]
+select *
+from books right outer join publishers
+on books.publisher_id=publishers.publisher_id
+\end{lstlisting}
 
 \end{document}
