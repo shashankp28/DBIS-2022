@@ -1,0 +1,1 @@
+WITH S_count(dname, s_count) AS (SELECT S.dept_name, count(*) FROM student S GROUP BY S.dept_name) WITH I_count(dname, i_count) AS (SELECT I.dept_name, count(*) FROM instructor I GROUP BY I.dept_name) SELECT * FROM I_count LEFT OUTER JOIN S_count USING S_count.dname=I_count.dname;
