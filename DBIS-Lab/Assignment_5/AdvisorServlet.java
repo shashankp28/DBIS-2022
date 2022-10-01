@@ -39,7 +39,7 @@ public class AdvisorServlet extends HttpServlet{
 			ResultSet rset = ps.executeQuery();
 			int count=0;
 			while(rset.next()) {
-				advisor_dept=rset.getString("name");//getting student name and storing in a variable
+				advisor_dept=rset.getString("dept_name");//getting student name and storing in a variable
 				++count;
 			}
 			out.println("Advisor ID is " +advisor_id+" Advisor Department is "+advisor_dept);//printing student id and name
