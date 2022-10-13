@@ -11,15 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.Date;
 
 /**
  * Servlet implementation class StudentServlet
  */
-@WebServlet("/StudentServlet")
-public class StudentServlet extends HttpServlet {
+@WebServlet("/IssueServlet")
+public class IssueServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
    
-    public StudentServlet() {
+    public IssueServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,14 +29,17 @@ public class StudentServlet extends HttpServlet {
 		{
 	
 		//getting input values from jsp page
-		String id = request.getParameter("id");
-		String name = request.getParameter("name");
-		String dept_name = request.getParameter("dept_name");
-		int tot_cred = Integer.parseInt(request.getParameter("tot_cred"));
-
+		int s_id = Integer.parseInt(request.getParameter("s_id"));
+		int b_id = Integer.parseInt(request.getParameter("b_id"));
+		String issue_date= request.getParameter("issue_date");
+		String return_date = request.getParameter("return_date");
+		
+		if(return_date=="") {
+			return_date = null;
+		}
 
 		Connection con = null;
- 		String url = "jdbc:mysql://localhost:3306/university"; //MySQL URL and followed by the database name
+ 		String url = "jdbc:mysql://localhost:3306/library"; //MySQL URL and followed by the database name
  		String username = "root"; //MySQL username
  		String password = "MyPassword@123"; //MySQL password
 		
@@ -44,18 +48,18 @@ public class StudentServlet extends HttpServlet {
  		System.out.println("Printing connection object "+con);
 
 		//Prepared Statement to add student data
-		PreparedStatement st = con .prepareStatement("insert into student values(?, ?,?,?)");
- 		st.setString(1,id);
-		st.setString(2,name);
-		st.setString(3,dept_name);
-		st.setInt(4,tot_cred);
+		PreparedStatement st = con .prepareStatement("insert into issue values(?, ?, ?, ?)");
+ 		st.setInt(1, s_id);
+		st.setInt(2, b_id);
+		st.setString(3, issue_date);
+		st.setString(4, return_date);
 		int result=st.executeUpdate();
 
 		//Checks if insert is successful.If yes,then redirects to Result.jsp page 
 		if(result>0)
 		{
 			
-			RequestDispatcher rd = request.getRequestDispatcher("Result.jsp");
+			RequestDispatcher rd = request.getRequestDispatcher("IssueResult.jsp");
 			rd.forward(request, response);
 		}
 

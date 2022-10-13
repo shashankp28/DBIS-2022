@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Add Result</title>
 </head>
+<h3><a href="Home.jsp">Home</a></h3>
 <body>
- <a><b>Added Student Successfully!!!!</b></a>
+ <a><b>Added Book Successfully!!!!</b></a>
 </body>
 </html>

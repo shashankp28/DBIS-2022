@@ -3,27 +3,28 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Student Addition Form</title>
+<title>Form to Add a Book</title>
 </head>
+<h3><a href="Home.jsp">Home</a></h3>
 <body>
-<h1>Student Details </h1>
-<form action="StudentServlet" method="post">
+<h1>Book Details</h1>
+<form action="AddServlet" method="post">
 			<table style="with: 50%">
 				<tr>
-					<td>Student Id</td>
-					<td><input type="text" name="id" /></td>
+					<td>Book Id</td>
+					<td><input type="number" name="id" required /></td>
 				</tr>
 				<tr>
-					<td>Student Name</td>
-					<td><input type="text" name="name" /></td>
+					<td>Title</td>
+					<td><input type="text" name="title" required /></td>
 				</tr>
 				<tr>
-					<td>Student Department</td>
-					<td><input type="text" name="dept_name" /></td>
+					<td>Category</td>
+					<td><input type="text" name="category"/></td>
 				</tr>
 					<tr>
-					<td>Student Total Credits</td>
-					<td><input type="text" name="tot_cred" /></td>
+					<td>Author</td>
+					<td><input type="text" name="author" required /></td>
 				</tr>
 
 			</table>

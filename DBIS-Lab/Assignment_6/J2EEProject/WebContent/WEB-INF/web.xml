@@ -7,16 +7,28 @@
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>default.html</welcome-file>
     <welcome-file>default.htm</welcome-file>
-    <welcome-file>Input.jsp</welcome-file>
+    <welcome-file>Home.jsp</welcome-file>
   </welcome-file-list>
-  <servlet>
+ <servlet>
  <description></description>
- <display-name>StudentServlet</display-name>
- <servlet-name>StudentServlet</servlet-name>
- <servlet-class>StudentServlet</servlet-class>
+ <display-name>IssueServlet</display-name>
+ <servlet-name>IssueServlet</servlet-name>
+ <servlet-class>IssueServlet</servlet-class>
+ </servlet>
+ <servlet>
+ <description></description>
+ <display-name>AddServlet</display-name>
+ <servlet-name>AddServlet</servlet-name>
+ <servlet-class>AddServlet</servlet-class>
  </servlet>
  <servlet-mapping>
- <servlet-name>StudentServlet</servlet-name>
- <url-pattern>/StudentServlet</url-pattern>
+ <servlet-name>IssueServlet</servlet-name>
+ <url-pattern>/IssueServlet</url-pattern>
  </servlet-mapping>
+ <servlet-mapping>
+ <servlet-name>AddServlet</servlet-name>
+ <url-pattern>/AddServlet</url-pattern>
+ </servlet-mapping>
+ 
+ 
 </web-app>
