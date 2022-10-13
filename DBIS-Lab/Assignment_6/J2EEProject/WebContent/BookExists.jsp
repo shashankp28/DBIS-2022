@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Issue Result</title>
+<title>Add Result</title>
 </head>
 <h3><a href="Home.jsp">Home</a></h3>
 <body>
