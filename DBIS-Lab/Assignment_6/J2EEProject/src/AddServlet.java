@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * Servlet implementation class StudentServlet
@@ -44,6 +45,14 @@ public class AddServlet extends HttpServlet {
  		System.out.println("Printing connection object "+con);
 
 		//Prepared Statement to add student data
+ 		PreparedStatement check = con .prepareStatement("select book_id from book where book_id=?");
+ 		check.setInt(1, id);
+ 		ResultSet rs= check.executeQuery();
+ 		if(rs.isBeforeFirst()) {
+ 			RequestDispatcher rd = request.getRequestDispatcher("BookExists.jsp");
+			rd.forward(request, response);
+ 		}
+ 		
 		PreparedStatement st = con .prepareStatement("insert into book values(?, ?, ?, ?)");
  		st.setInt(1, id);
 		st.setString(2, title);
@@ -63,6 +72,8 @@ public class AddServlet extends HttpServlet {
 		 catch (Exception e) 
  		{
  			e.printStackTrace();
+ 			RequestDispatcher rd = request.getRequestDispatcher("SQLError.jsp");
+			rd.forward(request, response);
  		}
 
 	

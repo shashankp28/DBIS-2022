@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Date;
 
 /**
@@ -46,7 +47,23 @@ public class IssueServlet extends HttpServlet {
 		Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection(url, username, password); //attempting to connect to MySQL database
  		System.out.println("Printing connection object "+con);
-
+ 		
+ 		PreparedStatement check_book = con .prepareStatement("select book_id from book where book_id=?");
+ 		check_book.setInt(1, b_id);
+ 		ResultSet rs_b= check_book.executeQuery();
+ 		if(!rs_b.isBeforeFirst()) {
+ 			RequestDispatcher rd = request.getRequestDispatcher("NoBook.jsp");
+			rd.forward(request, response);
+ 		}
+ 		
+ 		PreparedStatement check_student = con .prepareStatement("select student_id from student where student_id=?");
+ 		check_student.setInt(1, s_id);
+ 		ResultSet rs= check_student.executeQuery();
+ 		if(!rs.isBeforeFirst()) {
+ 			RequestDispatcher rd = request.getRequestDispatcher("NoStudent.jsp");
+			rd.forward(request, response);
+ 		}
+ 		
 		//Prepared Statement to add student data
 		PreparedStatement st = con .prepareStatement("insert into issue values(?, ?, ?, ?)");
  		st.setInt(1, s_id);
@@ -67,6 +84,8 @@ public class IssueServlet extends HttpServlet {
 		 catch (Exception e) 
  		{
  			e.printStackTrace();
+ 			RequestDispatcher rd = request.getRequestDispatcher("SQLError.jsp");
+			rd.forward(request, response);
  		}
 
 	
