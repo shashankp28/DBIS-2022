@@ -27,7 +27,7 @@ create table issue(
     book_id int not null, 
     issue_date DATE not null, 
     return_date DATE,
-    primary key(book_id, issue_date),
+    primary key(student_id, book_id, issue_date),
     foreign key(student_id) references student(student_id) on delete cascade,
     foreign key(book_id) references book(book_id) on delete cascade
 );
