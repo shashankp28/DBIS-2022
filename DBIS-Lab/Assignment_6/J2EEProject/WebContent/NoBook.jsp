@@ -8,6 +8,6 @@
 </head>
 <h3><a href="Home.jsp">Home</a></h3>
 <body>
- <a><b>Book issued successfully</b></a>
+ <a><b style="color: red;">No Such Book Exists</b></a>
 </body>
 </html>
